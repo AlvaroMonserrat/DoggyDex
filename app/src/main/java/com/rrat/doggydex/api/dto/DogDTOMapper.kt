@@ -4,7 +4,7 @@ import com.rrat.doggydex.model.Dog
 
 class DogDTOMapper {
 
-    fun fromDogDTOToDogDomain(dogDTO: DogDTO): Dog {
+    private fun fromDogDTOToDogDomain(dogDTO: DogDTO): Dog {
         return Dog(
             dogDTO.id,
             dogDTO.index,

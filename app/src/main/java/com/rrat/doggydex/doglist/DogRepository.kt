@@ -1,17 +1,71 @@
 package com.rrat.doggydex.doglist
 
+import com.rrat.doggydex.UNKNOWN_ERROR
 import com.rrat.doggydex.api.ApiResponseStatus
 import com.rrat.doggydex.api.DogsApi.retrofitService
 import com.rrat.doggydex.api.dto.AddDogToUserDTO
 import com.rrat.doggydex.api.dto.DogDTOMapper
 import com.rrat.doggydex.api.makeNetworkCall
 import com.rrat.doggydex.model.Dog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class DogRepository {
 
-    suspend fun downloadDogs(): ApiResponseStatus<List<Dog>>{
+
+    suspend fun getDogCollection(): ApiResponseStatus<List<Dog>>{
+        return withContext(Dispatchers.IO){
+            val allDogsListResponse = downloadDogs()
+            val userDogsListResponse = getUserDogs()
+
+            if(allDogsListResponse is ApiResponseStatus.Error){
+                allDogsListResponse
+            }else if(userDogsListResponse is ApiResponseStatus.Error){
+                userDogsListResponse
+            }else if(allDogsListResponse is ApiResponseStatus.Success &&
+                userDogsListResponse is ApiResponseStatus.Success)
+            {
+                ApiResponseStatus.Success(getCollectionList(allDogsListResponse.data, userDogsListResponse.data))
+            }else{
+                ApiResponseStatus.Error(UNKNOWN_ERROR)
+            }
+        }
+    }
+
+    private fun getCollectionList(allDogList: List<Dog>, userDogList: List<Dog>): List<Dog>{
+        return allDogList.map {
+            if(userDogList.contains(it)){
+                it
+            }else{
+                Dog(0,
+                    it.index,
+                    "",
+                    "",
+                    0.0,
+                    0.0,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                )
+            }
+        }
+    }
+
+
+    private suspend fun downloadDogs(): ApiResponseStatus<List<Dog>>{
         return makeNetworkCall {
             val dogListApiResponse = retrofitService.getAllDogs()
+            val dogDTOList = dogListApiResponse.data.dogs
+            val dogDTOMapper = DogDTOMapper()
+            dogDTOMapper.fromDogDTOListToDogDomainList(dogDTOList)
+        }
+    }
+
+    private suspend fun getUserDogs(): ApiResponseStatus<List<Dog>> {
+        return makeNetworkCall {
+            val dogListApiResponse = retrofitService.getUserDogs()
             val dogDTOList = dogListApiResponse.data.dogs
             val dogDTOMapper = DogDTOMapper()
             dogDTOMapper.fromDogDTOListToDogDomainList(dogDTOList)
@@ -29,13 +83,6 @@ class DogRepository {
         }
     }
 
-    suspend fun getUserDogs(): ApiResponseStatus<List<Dog>> {
-        return makeNetworkCall {
-            val dogListApiResponse = retrofitService.getUserDogs()
-            val dogDTOList = dogListApiResponse.data.dogs
-            val dogDTOMapper = DogDTOMapper()
-            dogDTOMapper.fromDogDTOListToDogDomainList(dogDTOList)
-        }
-    }
+
 
 }
