@@ -1,18 +1,52 @@
 package com.rrat.doggydex
 
+import android.Manifest
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.core.content.ContextCompat
 import com.rrat.doggydex.api.ApiServiceInterceptor
 import com.rrat.doggydex.auth.LoginActivity
 import com.rrat.doggydex.databinding.ActivityMainBinding
 import com.rrat.doggydex.doglist.DogListActivity
 import com.rrat.doggydex.model.User
 import com.rrat.doggydex.settings.SettingsActivity
+import java.io.File
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var imageCapture: ImageCapture
+    private lateinit var cameraExecutor: ExecutorService
+    private var isCameraReady = false
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission is granted. Continue the action or workflow in your
+                // app.
+                setupCamera()
+            } else {
+                Toast.makeText(this,
+                    "You need to accept camera permission to use camera",
+                    Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +69,105 @@ class MainActivity : AppCompatActivity() {
         binding.settingsFab.setOnClickListener {
             startSettingsActivity()
         }
+
+        binding.takePhotoFab.setOnClickListener {
+            if (isCameraReady){
+                takePhoto()
+            }
+        }
+
+        requestCameraPermission()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(::cameraExecutor.isInitialized){
+            cameraExecutor.shutdown()
+        }
+    }
+
+    private fun setupCamera(){
+        binding.cameraPreview.post {
+            imageCapture = ImageCapture.Builder()
+                //.setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                .setTargetRotation(binding.cameraPreview.display.rotation)
+                .build()
+
+            cameraExecutor = Executors.newSingleThreadExecutor()
+            startCamera()
+            isCameraReady = true
+        }
+    }
+
+
+    private fun startCamera(){
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+
+        cameraProviderFuture.addListener({
+            val cameraProvider = cameraProviderFuture.get()
+            val preview = Preview.Builder().build()
+            preview.setSurfaceProvider(binding.cameraPreview.surfaceProvider)
+
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+            cameraProvider.unbindAll()
+
+            cameraProvider.bindToLifecycle(
+                this,
+                cameraSelector,
+                preview,
+                imageCapture
+            )
+        }, ContextCompat.getMainExecutor(this))
+    }
+
+    private fun takePhoto(){
+
+//        val localDir = ContextWrapper(this).getDir("images_dogs", Context.MODE_PRIVATE)
+//        val photoFile = File(localDir.absolutePath + "/" + "example" + ".jpg")
+        val outputFileOptions = ImageCapture.OutputFileOptions.Builder(getOutputPhotoFile()).build()
+
+        Log.i("CAMERA", "HERE")
+        imageCapture.takePicture(outputFileOptions, cameraExecutor,
+            object : ImageCapture.OnImageSavedCallback{
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    runOnUiThread {
+                        Toast.makeText(this@MainActivity,
+                            "Photo was taken successfully",
+                            Toast.LENGTH_SHORT).show()
+
+                        val photoUri = outputFileResults.savedUri
+                        startViewerImageActivity(photoUri.toString())
+                    }
+
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                    runOnUiThread {
+                        Toast.makeText(baseContext,
+                            "Error taking photo ${exception.message}",
+                            Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+
+            }
+        )
+
+
+    }
+
+    private fun getOutputPhotoFile(): File{
+        val mediaDir = externalMediaDirs.firstOrNull()?.let {
+            File(it, resources.getString(R.string.app_name) + ".jpg").apply {
+                mkdirs()
+            }
+        }
+        return if (mediaDir != null && mediaDir.exists()){
+            mediaDir
+        }else{
+            filesDir
+        }
     }
 
     private fun startSettingsActivity() {
@@ -50,5 +183,48 @@ class MainActivity : AppCompatActivity() {
     private fun startLoginActivity() {
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
+    }
+
+    private fun startViewerImageActivity(photoUri: String){
+        val intent = Intent(this, ViewerImageActivity::class.java)
+        intent.putExtra(PHOTO_URI_EXTRA, photoUri)
+        startActivity(intent)
+    }
+
+    private fun requestCameraPermission(){
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                // You can use the API that requires the permission.
+                setupCamera()
+
+            }
+            shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
+            // In an educational UI, explain to the user why your app requires this
+            // permission for a specific feature to behave as expected. In this UI,
+            // include a "cancel" or "no thanks" button that allows the user to
+            // continue using your app without granting the permission.
+                AlertDialog.Builder(this)
+                    .setTitle("Accept please")
+                    .setMessage("Do you agree?")
+                    .setPositiveButton(android.R.string.ok)
+                    {
+                        _, _ ->
+                        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                    .setNegativeButton(android.R.string.cancel){
+                            _, _ ->
+                    }.show()
+
+        }
+            else -> {
+                // You can directly ask for the permission.
+                // The registered ActivityResultCallback gets the result of this request.
+                requestPermissionLauncher.launch(
+                    Manifest.permission.CAMERA )
+            }
+        }
     }
 }

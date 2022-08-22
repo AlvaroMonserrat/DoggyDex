@@ -8,6 +8,7 @@ import com.rrat.doggydex.api.dto.DogDTOMapper
 import com.rrat.doggydex.api.makeNetworkCall
 import com.rrat.doggydex.model.Dog
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 
 class DogRepository {
@@ -15,8 +16,11 @@ class DogRepository {
 
     suspend fun getDogCollection(): ApiResponseStatus<List<Dog>>{
         return withContext(Dispatchers.IO){
-            val allDogsListResponse = downloadDogs()
-            val userDogsListResponse = getUserDogs()
+            val allDogsListDeferred = async{ downloadDogs() }
+            val userDogsListDeferred = async { getUserDogs() }
+
+            val allDogsListResponse = allDogsListDeferred.await()
+            val userDogsListResponse = userDogsListDeferred.await()
 
             if(allDogsListResponse is ApiResponseStatus.Error){
                 allDogsListResponse
@@ -48,9 +52,10 @@ class DogRepository {
                     "",
                     "",
                     "",
+                    inCollection = false
                 )
             }
-        }
+        }.sorted()
     }
 
 

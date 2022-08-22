@@ -1,7 +1,6 @@
 package com.rrat.doggydex
 
 
-
 const val BASE_URL = "https://todogs.herokuapp.com/api/v1/"
 const val GET_ALL_DOGS = "dogs"
 const val SIGN_UP = "sign_up"
@@ -10,6 +9,7 @@ const val ADD_DOG_TO_USER = "add_dog_to_user"
 const val GET_USER_DOGS_URL = "get_user_dogs"
 
 const val DOG_EXTRA = "dog"
+const val PHOTO_URI_EXTRA = "photo_uri"
 
 
 //ERROR MESSAGES

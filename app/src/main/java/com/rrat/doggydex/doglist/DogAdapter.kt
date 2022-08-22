@@ -1,11 +1,14 @@
 package com.rrat.doggydex.doglist
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.rrat.doggydex.R
 import com.rrat.doggydex.databinding.DogListItemBinding
 import com.rrat.doggydex.model.Dog
 
@@ -51,16 +54,43 @@ class DogAdapter : ListAdapter<Dog, DogAdapter.DogViewHolder>(DiffCallback) {
         : RecyclerView.ViewHolder(binding.root){
 
             fun bind(dog: Dog){
-                binding.dogListItemLayout.setOnClickListener {
-                    onItemClickListener?.let { onClick -> onClick(dog) }
+
+                if(dog.inCollection){
+
+                    binding.dogListItemLayout.background =
+                        ContextCompat.getDrawable(
+                            binding.dogImage.context,
+                            R.drawable.dog_list_item_background
+                        )
+
+                    binding.dogImage.visibility = View.VISIBLE
+                    binding.dogIndex.visibility = View.GONE
+
+                    binding.dogListItemLayout.setOnClickListener {
+                        onItemClickListener?.let { onClick -> onClick(dog) }
+                    }
+
+                    binding.dogImage.load(dog.imageUrl)
+
+
+                }else{
+                    binding.dogImage.visibility = View.GONE
+                    binding.dogIndex.visibility = View.VISIBLE
+
+                    binding.dogIndex.text = dog.index.toString()
+
+                    binding.dogListItemLayout.background =
+                        ContextCompat.getDrawable(
+                            binding.dogImage.context,
+                            R.drawable.dog_list_item_null_background
+                        )
+
+                    binding.dogListItemLayout.setOnLongClickListener {
+                        onLongItemClickListener?.let { onClick -> onClick(dog) }
+                        true
+                    }
                 }
 
-                binding.dogImage.load(dog.imageUrl)
-
-                binding.dogListItemLayout.setOnLongClickListener {
-                    onLongItemClickListener?.let { onClick -> onClick(dog) }
-                    true
-                }
             }
     }
 
