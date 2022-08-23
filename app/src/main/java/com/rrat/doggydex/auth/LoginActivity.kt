@@ -4,11 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.findNavController
-import com.rrat.doggydex.MainActivity
+import com.rrat.doggydex.main.MainActivity
 import com.rrat.doggydex.R
 import com.rrat.doggydex.api.ApiResponseStatus
 import com.rrat.doggydex.databinding.ActivityLoginBinding
