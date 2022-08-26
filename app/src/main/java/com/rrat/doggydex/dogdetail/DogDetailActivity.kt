@@ -13,6 +13,7 @@ import com.rrat.doggydex.R
 import com.rrat.doggydex.api.ApiResponseStatus
 import com.rrat.doggydex.databinding.ActivityDogDetailBinding
 
+/*
 class DogDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDogDetailBinding
@@ -74,3 +75,5 @@ class DogDetailActivity : AppCompatActivity() {
         return false
     }
 }
+
+ */

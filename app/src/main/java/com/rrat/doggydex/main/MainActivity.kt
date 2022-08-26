@@ -1,28 +1,30 @@
 package com.rrat.doggydex.main
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.*
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.*
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import com.rrat.doggydex.*
-import com.rrat.doggydex.R
+import com.rrat.doggydex.DOG_EXTRA
+import com.rrat.doggydex.IS_RECOGNITION
+import com.rrat.doggydex.LABEL_PATH
+import com.rrat.doggydex.MODEL_PATH
 import com.rrat.doggydex.api.ApiResponseStatus
 import com.rrat.doggydex.api.ApiServiceInterceptor
 import com.rrat.doggydex.auth.LoginActivity
 import com.rrat.doggydex.databinding.ActivityMainBinding
-import com.rrat.doggydex.dogdetail.DogDetailActivity
+import com.rrat.doggydex.dogdetail.DogDetailComposeActivity
 import com.rrat.doggydex.doglist.DogListActivity
 import com.rrat.doggydex.machinelearning.Classifier
 import com.rrat.doggydex.machinelearning.DogRecognition
@@ -30,8 +32,6 @@ import com.rrat.doggydex.model.Dog
 import com.rrat.doggydex.model.User
 import com.rrat.doggydex.settings.SettingsActivity
 import org.tensorflow.lite.support.common.FileUtil
-import java.io.ByteArrayOutputStream
-import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startDogDetailsActivity(dog: Dog) {
-        val intent = Intent(this, DogDetailActivity::class.java)
+        val intent = Intent(this, DogDetailComposeActivity::class.java)
         intent.putExtra(DOG_EXTRA, dog)
         intent.putExtra(IS_RECOGNITION, true)
         startActivity(intent)

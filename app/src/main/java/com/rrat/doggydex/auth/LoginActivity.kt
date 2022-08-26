@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.findNavController
@@ -11,9 +13,10 @@ import com.rrat.doggydex.main.MainActivity
 import com.rrat.doggydex.R
 import com.rrat.doggydex.api.ApiResponseStatus
 import com.rrat.doggydex.databinding.ActivityLoginBinding
+import com.rrat.doggydex.dogdetail.ui.theme.DoggyDexTheme
 import com.rrat.doggydex.model.User
 
-class LoginActivity : AppCompatActivity(),
+class LoginActivity : ComponentActivity(),
     LoginFragment.LoginFragmentActions,
         SignUpFragment.SignUpFragmentActions
 {
@@ -24,7 +27,14 @@ class LoginActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        
+        setContent { 
+            DoggyDexTheme() {
+                AuthScreen()
+            }
+        }
+        
+       /* binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         viewModel.status.observe(this){
@@ -38,7 +48,7 @@ class LoginActivity : AppCompatActivity(),
                 User.setLoggedInUser(this, user)
                 startMainActivity()
             }
-        }
+        }*/
     }
 
     private fun startMainActivity() {

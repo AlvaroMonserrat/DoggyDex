@@ -2,68 +2,49 @@ package com.rrat.doggydex.doglist
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.rrat.doggydex.DOG_EXTRA
-import com.rrat.doggydex.api.ApiResponseStatus
-import com.rrat.doggydex.databinding.ActivityDogListBinding
-import com.rrat.doggydex.dogdetail.DogDetailActivity
+import com.rrat.doggydex.dogdetail.DogDetailComposeActivity
+import com.rrat.doggydex.dogdetail.ui.theme.DoggyDexTheme
+import com.rrat.doggydex.model.Dog
 
 
-private const val GRID_SPAN_COUNT = 3
+class DogListActivity : ComponentActivity() {
 
-class DogListActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityDogListBinding
-
-    private val dogListViewModel: DogListViewModel by viewModels()
+    private val viewModel: DogListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityDogListBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-
-        setupRecyclerView()
-
+        
+        setContent{
+            val status = viewModel.status
+            val dogList = viewModel.dogList
+            DoggyDexTheme() {
+                DogListScreen(
+                    dogList = dogList.value,
+                    status = status.value,
+                    onDogClicked = {startDogDetailActivity(it)},
+                    onNavigationIconClick = {onNavigationIconClick()},
+                    onDialogDismiss = {resetApiResponseStatus()}
+                )
+            }
+        }
     }
 
-    private fun setupRecyclerView() {
-        val adapter = DogAdapter()
+    private fun resetApiResponseStatus() {
+        viewModel.resetApiResponseStatus()
+    }
 
-        adapter.setOnItemClickListener {
-            val intent = Intent(this, DogDetailActivity::class.java)
-            intent.putExtra(DOG_EXTRA, it)
-            startActivity(intent)
-        }
+    private fun startDogDetailActivity(dog: Dog){
+        val intent = Intent(this, DogDetailComposeActivity::class.java)
+        intent.putExtra(DOG_EXTRA, dog)
+        startActivity(intent)
+    }
 
-        binding.dogRecycler.adapter = adapter
-        binding.dogRecycler.layoutManager = GridLayoutManager(this, GRID_SPAN_COUNT)
-
-        dogListViewModel.dogList.observe(this){
-            binding.dogRecycler.adapter = adapter
-            adapter.submitList(it)
-        }
-
-
-
-        dogListViewModel.status.observe(this){
-            status->
-                when(status){
-                    is ApiResponseStatus.Error -> {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this, status.message, Toast.LENGTH_SHORT).show()
-                    }
-                    is ApiResponseStatus.Loading -> binding.progressBar.visibility = View.VISIBLE
-                    is ApiResponseStatus.Success -> binding.progressBar.visibility = View.GONE
-                }
-        }
+    private fun onNavigationIconClick(){
+        finish()
     }
 }
 
