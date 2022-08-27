@@ -12,6 +12,7 @@ fun AuthEmailField(
     label: String,
     email: String,
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    isError: Boolean = false,
     onTextChanged: (String) -> Unit
 ) {
     OutlinedTextField(
@@ -19,6 +20,8 @@ fun AuthEmailField(
         label = { Text(text = label) },
         value = email,
         visualTransformation = visualTransformation,
+        isError = isError,
+        singleLine = true,
         onValueChange = { onTextChanged(it) }
     )
 }

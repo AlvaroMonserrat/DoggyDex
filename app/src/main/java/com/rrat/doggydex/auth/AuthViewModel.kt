@@ -1,5 +1,6 @@
 package com.rrat.doggydex.auth
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,26 +16,28 @@ class AuthViewModel(): ViewModel() {
 
     private val authRepository = AuthRepository()
 
-    private val _user = MutableLiveData<User>()
+    var user = mutableStateOf<User?>(null)
+        private set
 
-    val user: LiveData<User>
-        get() = _user
+//    val user: LiveData<User>
+//        get() = _user
 
-    private val _status = MutableLiveData<ApiResponseStatus<User>>()
-    val status: LiveData<ApiResponseStatus<User>>
-        get() = _status
+    var status = mutableStateOf<ApiResponseStatus<User>?>(null)
+        private set
+//    val status: LiveData<ApiResponseStatus<User>>
+//        get() = _status
 
 
     fun signUp(email: String, password: String, passwordConfirmation: String){
 
-        _status.value = ApiResponseStatus.Loading()
+        status.value = ApiResponseStatus.Loading()
         viewModelScope.launch {
             handleResponseStatus(authRepository.signUp(email, password, passwordConfirmation))
         }
     }
 
     fun signIn(email: String, password: String){
-        _status.value = ApiResponseStatus.Loading()
+        status.value = ApiResponseStatus.Loading()
         viewModelScope.launch {
             handleResponseStatus(authRepository.signIn(email, password))
         }
@@ -42,8 +45,12 @@ class AuthViewModel(): ViewModel() {
 
     private fun handleResponseStatus(apiResponseStatus: ApiResponseStatus<User>) {
         if(apiResponseStatus is ApiResponseStatus.Success){
-            _user.value = apiResponseStatus.data!!
+            user.value = apiResponseStatus.data
         }
-        _status.value = apiResponseStatus
+        status.value = apiResponseStatus
+    }
+
+    fun resetApiResponseStatus(){
+        status.value = null
     }
 }

@@ -26,17 +26,24 @@ import com.rrat.doggydex.composables.BackNavigationIcon
 
 @Composable
 fun SignUpScreen(
-    onNavigationIconClick: ()->Unit
+    onNavigationIconClick: ()->Unit,
+    onSignUpButtonClick: (email: String, pass: String, passConfirm:String) -> Unit
 ) {
     Scaffold(
         topBar = { SignUpTopBar(onClick = onNavigationIconClick) }
     ) {
-        SignUpSection(modifier = Modifier.padding(it))
+        SignUpSection(
+            modifier = Modifier.padding(it),
+            onSignUpButtonClick = onSignUpButtonClick
+        )
     }
 }
 
 @Composable
-fun SignUpSection(modifier: Modifier = Modifier){
+fun SignUpSection(
+    modifier: Modifier = Modifier,
+    onSignUpButtonClick: (email: String, pass: String, passConfirm:String) -> Unit
+){
 
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -83,7 +90,7 @@ fun SignUpSection(modifier: Modifier = Modifier){
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
-            onClick = {}
+            onClick = {onSignUpButtonClick(email, password, passwordConfirm)}
         ) {
             Text(
                 text = stringResource(id = R.string.sign_up),

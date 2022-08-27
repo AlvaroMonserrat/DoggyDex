@@ -16,12 +16,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.rrat.doggydex.R
+import com.rrat.doggydex.Utils
 import com.rrat.doggydex.composables.AuthEmailField
 import com.rrat.doggydex.composables.AuthFieldPassword
 
 @Composable
 fun LoginScreen(
+    onLoginButtonClick: (String, String)->Unit,
     onRegisterButtonClick: ()->Unit
 ) {
     Scaffold(
@@ -29,6 +32,7 @@ fun LoginScreen(
     ) {
         LoginSection(
             modifier = Modifier.padding(it),
+            onLoginButtonClick=onLoginButtonClick,
             onRegisterButtonClick = onRegisterButtonClick
         )
     }
@@ -37,10 +41,12 @@ fun LoginScreen(
 @Composable
 fun LoginSection(
     modifier: Modifier = Modifier,
+    onLoginButtonClick: (String, String)->Unit,
     onRegisterButtonClick: ()->Unit
 ) {
 
     var email by rememberSaveable { mutableStateOf("") }
+    var emailError by rememberSaveable { mutableStateOf(false)}
 
     var password by rememberSaveable { mutableStateOf("") }
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
@@ -51,12 +57,26 @@ fun LoginSection(
             .padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         AuthEmailField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             label = stringResource(id = R.string.email),
             email = email,
-            onTextChanged = { email = it }
+            onTextChanged = {
+                email = it
+                emailError = email.isEmpty()
+                            },
+            isError = emailError
         )
+
+        if(emailError){
+            Text(
+                modifier = modifier.align(Alignment.Start).padding(2.dp),
+                text = stringResource(id = R.string.email_is_not_valid),
+                fontSize = 14.sp,
+                color = Color.Red
+            )
+        }
 
         AuthFieldPassword(
             modifier = Modifier
@@ -73,7 +93,11 @@ fun LoginSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
-            onClick = {}
+            onClick = {
+                onLoginButtonClick(email, password)
+                emailError = email.isEmpty()
+            },
+            enabled = !emailError
         ) {
             Text(
                 text = stringResource(id = R.string.login),
@@ -84,13 +108,17 @@ fun LoginSection(
 
 
         Text(
-            modifier= Modifier.fillMaxWidth().padding(16.dp),
+            modifier= Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             text = stringResource(id = R.string.do_not_have_an_account),
             textAlign = TextAlign.Center
         )
 
         TextButton(
-            modifier= Modifier.fillMaxWidth().padding(16.dp),
+            modifier= Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             onClick = onRegisterButtonClick,
             content = {Text(text=stringResource(id = R.string.register))}
         )

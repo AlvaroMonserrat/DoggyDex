@@ -16,39 +16,44 @@ import com.rrat.doggydex.databinding.ActivityLoginBinding
 import com.rrat.doggydex.dogdetail.ui.theme.DoggyDexTheme
 import com.rrat.doggydex.model.User
 
-class LoginActivity : ComponentActivity(),
-    LoginFragment.LoginFragmentActions,
-        SignUpFragment.SignUpFragmentActions
-{
-
-    private lateinit var binding: ActivityLoginBinding
+class LoginActivity : ComponentActivity() {
 
     private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        setContent { 
-            DoggyDexTheme() {
-                AuthScreen()
-            }
-        }
-        
-       /* binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        viewModel.status.observe(this){
-                status->
-                renderResponse(status)
-        }
+        setContent {
+            val user = viewModel.user.value
+            val status = viewModel.status.value
 
-        viewModel.user.observe(this){
-            user ->
-            if(user != null){
+            if (user != null) {
                 User.setLoggedInUser(this, user)
                 startMainActivity()
             }
-        }*/
+
+            DoggyDexTheme() {
+                AuthScreen(
+                    status = status,
+                    onDialogDismiss = { resetApiResponseStatus() },
+                    onLoginButtonClick = { email, pass ->
+                        (viewModel.signIn(email, pass))
+                    },
+                    onSignUpButtonClick = { email, pass, passConfirm ->
+                        (viewModel.signUp(
+                            email,
+                            pass,
+                            passConfirm
+                        ))
+                    }
+                )
+
+            }
+        }
+    }
+
+    private fun resetApiResponseStatus() {
+        viewModel.resetApiResponseStatus()
     }
 
     private fun startMainActivity() {
@@ -56,45 +61,4 @@ class LoginActivity : ComponentActivity(),
         finish()
     }
 
-    private fun renderResponse(status: ApiResponseStatus<User>?)=with(binding) {
-        when (status) {
-            is ApiResponseStatus.Error -> {
-                progressBar.visibility = View.GONE
-                showErrorDialog(status.message)
-            }
-            is ApiResponseStatus.Loading -> progressBar.visibility = View.VISIBLE
-            is ApiResponseStatus.Success -> progressBar.visibility = View.GONE
-            else -> showErrorDialog("Error Unknown")
-        }
-    }
-
-    private fun showErrorDialog(message: String){
-        AlertDialog.Builder(this)
-            .setTitle(R.string.there_was_an_error)
-            .setMessage(message)
-            .setPositiveButton(android.R.string.ok) {
-                _, _ ->
-            }
-            .create()
-            .show()
-
-    }
-
-
-    override fun onRegisterButtonClick() {
-        findNavController(R.id.nav_host_fragment)
-            .navigate(LoginFragmentDirections.actionLoginFragmentToSignUpFragment())
-    }
-
-    override fun onSignInFieldsValidated(email: String, password: String) {
-        viewModel.signIn(email, password)
-    }
-
-    override fun onSignUpFieldsValidated(
-        email: String,
-        password: String,
-        passwordConfirmation: String
-    ) {
-        viewModel.signUp(email, password, passwordConfirmation)
-    }
 }

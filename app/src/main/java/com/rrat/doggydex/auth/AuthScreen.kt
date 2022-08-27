@@ -5,17 +5,40 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.rrat.doggydex.api.ApiResponseStatus
 import com.rrat.doggydex.auth.AuthNavDestinations.LoginScreenDestination
 import com.rrat.doggydex.auth.AuthNavDestinations.SignUpScreenDestination
+import com.rrat.doggydex.composables.ErrorDialog
+import com.rrat.doggydex.composables.LoadingWheel
+import com.rrat.doggydex.model.User
 
 @Composable
-fun AuthScreen(){
+fun AuthScreen(
+    status: ApiResponseStatus<User>?,
+    onDialogDismiss: () -> Unit = {},
+    onLoginButtonClick: (String, String)->Unit,
+    onSignUpButtonClick: (email: String, pass: String, passConfirm:String) -> Unit
+){
     val navController = rememberNavController()
-    AuthNavHost(navController = navController)
+    AuthNavHost(
+        navController = navController,
+        onLoginButtonClick = onLoginButtonClick,
+        onSignUpButtonClick = onSignUpButtonClick
+    )
+
+    if (status is ApiResponseStatus.Loading) {
+        LoadingWheel()
+    } else if (status is ApiResponseStatus.Error) {
+        ErrorDialog(status.message, onDialogDismiss = onDialogDismiss)
+    }
 }
 
 @Composable
-private fun AuthNavHost(navController: NavHostController) {
+private fun AuthNavHost(
+    navController: NavHostController,
+    onLoginButtonClick: (String, String)->Unit,
+    onSignUpButtonClick: (email: String, pass: String, passConfirm:String) -> Unit
+    ) {
     NavHost(
         navController = navController,
         startDestination = LoginScreenDestination
@@ -23,6 +46,7 @@ private fun AuthNavHost(navController: NavHostController) {
 
         composable(route = LoginScreenDestination) {
             LoginScreen(
+                onLoginButtonClick = onLoginButtonClick,
                 onRegisterButtonClick = {
                     navController.navigate(route = SignUpScreenDestination)
                 }
@@ -33,7 +57,8 @@ private fun AuthNavHost(navController: NavHostController) {
             SignUpScreen(
                 onNavigationIconClick = {
                     navController.navigateUp()
-                }
+                },
+                onSignUpButtonClick = onSignUpButtonClick
             )
         }
     }
