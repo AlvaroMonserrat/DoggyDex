@@ -19,7 +19,9 @@ import com.rrat.doggydex.api.ApiResponseStatus
 import com.rrat.doggydex.dogdetail.ui.theme.DoggyDexTheme
 import com.rrat.doggydex.machinelearning.DogRecognition
 import com.rrat.doggydex.model.Dog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DogDetailComposeActivity : ComponentActivity() {
 
     private val viewModel: DogDetailViewModel by viewModels()

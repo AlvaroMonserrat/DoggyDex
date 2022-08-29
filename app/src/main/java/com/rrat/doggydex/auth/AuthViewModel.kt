@@ -1,20 +1,19 @@
 package com.rrat.doggydex.auth
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rrat.doggydex.api.ApiResponseStatus
-import com.rrat.doggydex.doglist.DogRepository
-import com.rrat.doggydex.model.Dog
 import com.rrat.doggydex.model.User
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AuthViewModel(): ViewModel() {
 
-
-    private val authRepository = AuthRepository()
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val authRepository: AuthTasks
+): ViewModel() {
 
     var user = mutableStateOf<User?>(null)
         private set

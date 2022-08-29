@@ -1,33 +1,26 @@
 package com.rrat.doggydex.doglist
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rrat.doggydex.api.ApiResponseStatus
 import com.rrat.doggydex.model.Dog
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DogListViewModel: ViewModel() {
-
-    private val dogRepository = DogRepository()
+@HiltViewModel
+class DogListViewModel @Inject constructor(private val dogRepository: DogTasks): ViewModel() {
 
     var dogList = mutableStateOf<List<Dog>>(listOf())
         private set
 
-/*    val dogList: LiveData<List<Dog>?>
-        get() = _dogList*/
-
     var status = mutableStateOf<ApiResponseStatus<Any>?>(null)
         private set
-/*    val status: LiveData<ApiResponseStatus<Any>>
-        get() = _status*/
 
     init {
        getDogCollection()
     }
-
 
 
     private fun getDogCollection(){

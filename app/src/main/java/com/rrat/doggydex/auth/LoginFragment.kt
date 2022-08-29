@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import com.rrat.doggydex.R
 import com.rrat.doggydex.Utils.Companion.isValidEmail
 import com.rrat.doggydex.databinding.FragmentLoginBinding
+import dagger.hilt.android.AndroidEntryPoint
+
 
 
 class LoginFragment : Fragment() {

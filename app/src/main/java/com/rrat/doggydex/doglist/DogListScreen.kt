@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.rrat.doggydex.R
 import com.rrat.doggydex.api.ApiResponseStatus
@@ -32,12 +33,12 @@ private const val GRID_SPAN_COUNT = 3
 
 @Composable
 fun DogListScreen(
-    dogList: List<Dog>,
-    status: ApiResponseStatus<Any>? = null,
     onDogClicked: (Dog) -> Unit,
     onNavigationIconClick: ()->Unit,
-    onDialogDismiss: () -> Unit = {}
+    viewModel: DogListViewModel = hiltViewModel()
 ) {
+    val status = viewModel.status.value
+    val dogList = viewModel.dogList.value
 
     Scaffold(
         topBar = {
@@ -58,7 +59,7 @@ fun DogListScreen(
     if (status is ApiResponseStatus.Loading) {
         LoadingWheel()
     } else if (status is ApiResponseStatus.Error) {
-        ErrorDialog(status.message, onDialogDismiss = onDialogDismiss)
+        ErrorDialog(status.message, onDialogDismiss = {viewModel.resetApiResponseStatus()})
     }
 
 }

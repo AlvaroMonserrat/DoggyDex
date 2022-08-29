@@ -7,18 +7,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rrat.doggydex.api.ApiResponseStatus
 import com.rrat.doggydex.doglist.DogRepository
+import com.rrat.doggydex.doglist.DogTasks
 import com.rrat.doggydex.machinelearning.Classifier
 import com.rrat.doggydex.machinelearning.ClassifierRepository
+import com.rrat.doggydex.machinelearning.ClassifierTasks
 import com.rrat.doggydex.machinelearning.DogRecognition
 import com.rrat.doggydex.model.Dog
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.nio.MappedByteBuffer
+import javax.inject.Inject
 
-class MainViewModel : ViewModel(){
-
-    private val dogRepository = DogRepository()
-
-    private lateinit var classifierRepository: ClassifierRepository
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val dogRepository: DogTasks,
+    private val classifierRepository: ClassifierTasks
+    ) : ViewModel(){
 
 
     private val _dog = MutableLiveData<Dog>()
@@ -34,10 +38,6 @@ class MainViewModel : ViewModel(){
     val dogRecognition: LiveData<DogRecognition>
         get() = _dogRecognition
 
-    fun setupClassifier(tfLiteModel: MappedByteBuffer, labels: List<String>){
-        val classifier = Classifier(tfLiteModel, labels)
-        classifierRepository = ClassifierRepository(classifier)
-    }
 
     fun recognizeImage(imageProxy: ImageProxy){
         viewModelScope.launch {
