@@ -106,6 +106,11 @@ class DogRepository @Inject constructor(
 
         return makeNetworkCall {
             val response = apiService.getDogByMlId(mlDogId)
+
+            if(!response.isSuccess){
+                throw Exception(response.message)
+            }
+
             val dogDTO = response.data.dog
             DogDTOMapper().fromDogDTOToDogDomain(dogDTO)
         }

@@ -1,6 +1,7 @@
 package com.rrat.doggydex.auth
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,7 +15,7 @@ import com.rrat.doggydex.model.User
 
 @Composable
 fun AuthScreen(
-    status: ApiResponseStatus<User>?,
+    viewModel: AuthViewModel = hiltViewModel(),
     onDialogDismiss: () -> Unit = {},
     onLoginButtonClick: (String, String)->Unit,
     onSignUpButtonClick: (email: String, pass: String, passConfirm:String) -> Unit
@@ -25,6 +26,8 @@ fun AuthScreen(
         onLoginButtonClick = onLoginButtonClick,
         onSignUpButtonClick = onSignUpButtonClick
     )
+
+    val status = viewModel.status.value
 
     if (status is ApiResponseStatus.Loading) {
         LoadingWheel()

@@ -20,7 +20,7 @@ class LoginActivity : ComponentActivity() {
 
         setContent {
             val user = viewModel.user.value
-            val status = viewModel.status.value
+
 
             if (user != null) {
                 User.setLoggedInUser(this, user)
@@ -29,7 +29,6 @@ class LoginActivity : ComponentActivity() {
 
             DoggyDexTheme() {
                 AuthScreen(
-                    status = status,
                     onDialogDismiss = { resetApiResponseStatus() },
                     onLoginButtonClick = { email, pass ->
                         (viewModel.signIn(email, pass))
