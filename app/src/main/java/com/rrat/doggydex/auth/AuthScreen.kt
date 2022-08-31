@@ -16,15 +16,23 @@ import com.rrat.doggydex.model.User
 @Composable
 fun AuthScreen(
     viewModel: AuthViewModel = hiltViewModel(),
-    onDialogDismiss: () -> Unit = {},
-    onLoginButtonClick: (String, String)->Unit,
-    onSignUpButtonClick: (email: String, pass: String, passConfirm:String) -> Unit
+    onAutoLogin: (User) -> Unit
 ){
+    val user = viewModel.user.value
+    if (user != null) {
+        onAutoLogin(user)
+    }
     val navController = rememberNavController()
     AuthNavHost(
         navController = navController,
-        onLoginButtonClick = onLoginButtonClick,
-        onSignUpButtonClick = onSignUpButtonClick
+        onLoginButtonClick = {email, pass -> (viewModel.signIn(email, pass))},
+        onSignUpButtonClick = { email, pass, passConfirm ->
+            (viewModel.signUp(
+                email,
+                pass,
+                passConfirm
+            ))
+        }
     )
 
     val status = viewModel.status.value
@@ -32,7 +40,7 @@ fun AuthScreen(
     if (status is ApiResponseStatus.Loading) {
         LoadingWheel()
     } else if (status is ApiResponseStatus.Error) {
-        ErrorDialog(status.message, onDialogDismiss = onDialogDismiss)
+        ErrorDialog(status.message, onDialogDismiss = {viewModel.resetApiResponseStatus()})
     }
 }
 

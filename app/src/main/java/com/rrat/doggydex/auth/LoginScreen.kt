@@ -13,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -59,7 +61,7 @@ fun LoginSection(
     ) {
 
         AuthEmailField(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth().semantics { testTag = "auth-email-field" },
             label = stringResource(id = R.string.email),
             email = email,
             onTextChanged = {
@@ -71,7 +73,10 @@ fun LoginSection(
 
         if(emailError){
             Text(
-                modifier = modifier.align(Alignment.Start).padding(2.dp),
+                modifier = modifier
+                    .align(Alignment.Start)
+                    .padding(2.dp)
+                    .semantics { testTag="email-error" },
                 text = stringResource(id = R.string.email_is_not_valid),
                 fontSize = 14.sp,
                 color = Color.Red
@@ -81,7 +86,8 @@ fun LoginSection(
         AuthFieldPassword(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = 16.dp)
+                .semantics { testTag = "auth-password-field" },
             label = stringResource(id = R.string.password),
             password = password,
             passwordHidden = passwordHidden,
@@ -92,9 +98,12 @@ fun LoginSection(
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = 16.dp)
+                .semantics { testTag = "login-button" },
             onClick = {
-                onLoginButtonClick(email, password)
+                if (email.isNotEmpty()){
+                    onLoginButtonClick(email, password)
+                }
                 emailError = email.isEmpty()
             },
             enabled = !emailError
@@ -118,7 +127,8 @@ fun LoginSection(
         TextButton(
             modifier= Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(16.dp)
+                .semantics { testTag = "register-button" },
             onClick = onRegisterButtonClick,
             content = {Text(text=stringResource(id = R.string.register))}
         )

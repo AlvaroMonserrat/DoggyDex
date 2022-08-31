@@ -31,6 +31,7 @@ import com.rrat.doggydex.machinelearning.DogRecognition
 import com.rrat.doggydex.model.Dog
 import com.rrat.doggydex.model.User
 import com.rrat.doggydex.settings.SettingsActivity
+import com.rrat.doggydex.testutils.EspressoIdlingResource
 import dagger.hilt.android.AndroidEntryPoint
 import org.tensorflow.lite.support.common.FileUtil
 import java.util.concurrent.ExecutorService
@@ -145,6 +146,7 @@ class MainActivity : AppCompatActivity() {
     private fun startCamera(){
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
+        EspressoIdlingResource.increment()
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder().build()
@@ -157,6 +159,7 @@ class MainActivity : AppCompatActivity() {
                 .build()
 
             imageAnalysis.setAnalyzer(cameraExecutor) { imageProxy ->
+                EspressoIdlingResource.decrement()
                 viewModel.recognizeImage(imageProxy)
             }
 
