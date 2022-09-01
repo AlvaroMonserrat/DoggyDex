@@ -16,10 +16,7 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import com.rrat.doggydex.DOG_EXTRA
-import com.rrat.doggydex.IS_RECOGNITION
-import com.rrat.doggydex.LABEL_PATH
-import com.rrat.doggydex.MODEL_PATH
+import com.rrat.doggydex.*
 import com.rrat.doggydex.api.ApiResponseStatus
 import com.rrat.doggydex.api.ApiServiceInterceptor
 import com.rrat.doggydex.auth.LoginActivity
@@ -117,6 +114,7 @@ class MainActivity : AppCompatActivity() {
     private fun startDogDetailsActivity(dog: Dog) {
         val intent = Intent(this, DogDetailComposeActivity::class.java)
         intent.putExtra(DOG_EXTRA, dog)
+        intent.putExtra(MOST_PROBABLE_DOGS_IDS_EXTRA, viewModel.probableDogIds)
         intent.putExtra(IS_RECOGNITION, true)
         startActivity(intent)
     }

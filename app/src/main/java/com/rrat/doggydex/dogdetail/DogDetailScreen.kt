@@ -11,6 +11,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,7 +28,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.SavedStateHandle
 import coil.compose.AsyncImage
+import com.rrat.doggydex.DOG_EXTRA
 import com.rrat.doggydex.R
 import com.rrat.doggydex.api.ApiResponseStatus
 import com.rrat.doggydex.composables.ErrorDialog
@@ -37,12 +43,18 @@ import com.rrat.doggydex.model.Dog
 @Composable
 fun DogDetailScreen(
     modifier: Modifier = Modifier,
-    dog: Dog,
-    status: ApiResponseStatus<Any>? = null,
-    onButtonClicked: () -> Unit,
-    onDialogDismiss: () -> Unit = {}
+    viewModel: DogDetailViewModel = hiltViewModel(),
+    onFinish: () -> Unit,
 ) {
 
+    val probableDogsDialogEnabled = remember{ mutableStateOf(false)}
+    val status = viewModel.status.value
+    val dog = viewModel.dog.value!!
+    val isRecognition = viewModel.isRecognition.value
+
+    if (status is ApiResponseStatus.Success) {
+        onFinish()
+    }
     Column(
         Modifier
             .fillMaxSize()
@@ -51,6 +63,7 @@ fun DogDetailScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Box(
             modifier = modifier
             /*    .background(colorResource(id = R.color.secondary_background))
@@ -58,7 +71,10 @@ fun DogDetailScreen(
             contentAlignment = Alignment.TopCenter
         ) {
 
-            DogInformation(dog)
+            DogInformation(dog, isRecognition){
+                viewModel.getProbableDogs()
+                probableDogsDialogEnabled.value = true
+            }
 
             AsyncImage(
                 modifier = Modifier
@@ -68,10 +84,25 @@ fun DogDetailScreen(
                 contentDescription = dog.name
             )
 
+
             if (status is ApiResponseStatus.Loading) {
                 LoadingWheel()
             } else if (status is ApiResponseStatus.Error) {
-                ErrorDialog(status.message, onDialogDismiss = onDialogDismiss)
+                ErrorDialog(status.message, onDialogDismiss = { viewModel.resetApiResponseStatus() })
+            }
+
+            val probableDogList = viewModel.probableDogList.collectAsState().value
+
+            if(probableDogsDialogEnabled.value){
+                ProbableDogsDialog(
+                    mostProbableDogs = probableDogList,
+                    onShowMostProbableDogsDialogDismiss = {
+                        probableDogsDialogEnabled.value = false
+                    },
+                    onItemClicked = {
+                        viewModel.updateDog(it)
+                    }
+                )
             }
         }
 
@@ -79,10 +110,18 @@ fun DogDetailScreen(
             modifier = Modifier
                 .padding(16.dp)
                 .semantics { testTag = "close-details-screen-fab" },
-            onClick = onButtonClicked,
+            onClick = {
+                if (isRecognition) {
+                    viewModel.addDogToUser()
+                } else {
+                    onFinish()
+                }
+                      },
         ) {
             Icon(imageVector = Icons.Filled.Check, contentDescription = "")
         }
+
+
     }
 
 }
@@ -92,7 +131,11 @@ fun DogDetailScreen(
 
 
 @Composable
-fun DogInformation(dog: Dog) {
+fun DogInformation(
+    dog: Dog,
+    isRecognition: Boolean,
+    onProbableDogsButtonClick: ()->Unit
+) {
 
     Box(
         modifier = Modifier
@@ -148,6 +191,19 @@ fun DogInformation(dog: Dog) {
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Medium
                 )
+
+                if (isRecognition){
+                    Button(
+                        modifier = Modifier.padding(16.dp),
+                        onClick = onProbableDogsButtonClick,
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.not_your_dog_button),
+                            textAlign = TextAlign.Center,
+                            fontSize = 18.sp
+                        )
+                    }
+                }
 
                 Divider(
                     modifier = Modifier
@@ -499,7 +555,11 @@ fun DogDetailScreenPreview() {
                 "5",
                 "6"
             )
-            DogDetailScreen(dog = dog, status = null, onButtonClicked = {})
+
+            val savedStateHandle = SavedStateHandle()
+            savedStateHandle[DOG_EXTRA] = dog
+
+            DogDetailScreen(onFinish = {})
         }
     }
 }

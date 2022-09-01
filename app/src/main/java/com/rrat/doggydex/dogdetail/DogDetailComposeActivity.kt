@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.rrat.doggydex.DOG_EXTRA
 import com.rrat.doggydex.IS_RECOGNITION
+import com.rrat.doggydex.MOST_PROBABLE_DOGS_IDS_EXTRA
 import com.rrat.doggydex.R
 import com.rrat.doggydex.api.ApiResponseStatus
 import com.rrat.doggydex.dogdetail.ui.theme.DoggyDexTheme
@@ -24,49 +25,18 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DogDetailComposeActivity : ComponentActivity() {
 
-    private val viewModel: DogDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val dog = intent.extras?.getParcelable<Dog>(DOG_EXTRA)
-
-        val isRecognition = intent?.extras?.getBoolean(
-            IS_RECOGNITION, false
-        ) ?: false
-
-        if (isDogIsNull(dog)) return
-
         setContent {
-            val status = viewModel.status
 
-            if (status.value is ApiResponseStatus.Success) {
-                finish()
-            } else {
-                DoggyDexTheme {
-                    if (dog != null) {
-                        DogDetailScreen(
-                            dog = dog,
-                            status = status.value,
-                            onButtonClicked = { onButtonClicked(dog.id, isRecognition) },
-                            onDialogDismiss = { resetApiResponseStatus()})
-                    }
-                }
+            DoggyDexTheme {
+                DogDetailScreen(onFinish = { finish() })
             }
         }
     }
 
-    private fun resetApiResponseStatus() {
-        viewModel.resetApiResponseStatus()
-    }
-
-    private fun onButtonClicked(dogId: Long, isRecognition: Boolean) {
-        if (isRecognition) {
-            viewModel.addDogToUser(dogId)
-        } else {
-            finish()
-        }
-    }
 
     private fun isDogIsNull(dog: Dog?): Boolean {
         if (dog == null) {

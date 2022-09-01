@@ -11,6 +11,7 @@ import javax.inject.Inject
 
 interface ClassifierTasks{
     suspend fun recognizeImage(imageProxy: ImageProxy): DogRecognition
+    suspend fun getListRecognizeImage(imageProxy: ImageProxy): List<DogRecognition>
 }
 
 class ClassifierRepository @Inject constructor(private val classifier: Classifier): ClassifierTasks{
@@ -26,6 +27,17 @@ class ClassifierRepository @Inject constructor(private val classifier: Classifie
             }
         }
 
+    }
+
+    override suspend fun getListRecognizeImage(imageProxy: ImageProxy): List<DogRecognition> {
+        return withContext(Dispatchers.IO){
+            val bitmap = convertImageProxyToBitmap(imageProxy)
+            if(bitmap == null){
+                listOf(DogRecognition("", 0f))
+            }else{
+                classifier.recognizeImage(bitmap).subList(0, 5)
+            }
+        }
     }
 
     @SuppressLint("UnsafeOptInUsageError")

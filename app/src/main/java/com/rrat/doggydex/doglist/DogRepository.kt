@@ -1,5 +1,6 @@
 package com.rrat.doggydex.doglist
 
+import com.rrat.doggydex.R
 import com.rrat.doggydex.UNKNOWN_ERROR
 import com.rrat.doggydex.api.ApiResponseStatus
 import com.rrat.doggydex.api.ApiService
@@ -11,6 +12,11 @@ import com.rrat.doggydex.model.Dog
 import kotlinx.coroutines.CoroutineDispatcher
 
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -20,6 +26,7 @@ interface DogTasks{
     suspend fun getDogCollection(): ApiResponseStatus<List<Dog>>
     suspend fun addDogToUser(dogId: Long): ApiResponseStatus<Any>
     suspend fun getDogByMlId(mlDogId: String): ApiResponseStatus<Dog>
+    fun getProbableDogs(probableDogsIds: ArrayList<String>): Flow<ApiResponseStatus<Dog>>
 }
 
 class DogRepository @Inject constructor(
@@ -117,6 +124,29 @@ class DogRepository @Inject constructor(
 
     }
 
+    suspend fun getALlProbableDogs(probableDogsIds: ArrayList<String>): ApiResponseStatus<List<Dog>>{
+        return withContext(dispatcher){
+            val listDogs = mutableListOf<Dog>()
+            (0..probableDogsIds.size).map {
+                async {
+                    val apiResponseStatus = getDogByMlId(probableDogsIds[it])
+                    if(apiResponseStatus is ApiResponseStatus.Success){
+                        listDogs.add(apiResponseStatus.data)
+                    }
+                }
+            }.awaitAll()
 
+            ApiResponseStatus.Success(listDogs)
+        }
+    }
+
+    override fun getProbableDogs(probableDogsIds: ArrayList<String>): Flow<ApiResponseStatus<Dog>> {
+        return flow {
+            for (mlDogId in probableDogsIds){
+                val dog = getDogByMlId(mlDogId)
+                emit(dog)
+            }
+        }.flowOn(dispatcher)
+    }
 
 }
