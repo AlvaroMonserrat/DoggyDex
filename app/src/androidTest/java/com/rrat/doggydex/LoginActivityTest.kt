@@ -1,19 +1,16 @@
 package com.rrat.doggydex
 
-import android.Manifest
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.rule.GrantPermissionRule
-import com.rrat.doggydex.api.ApiResponseStatus
-import com.rrat.doggydex.auth.AuthRepository
+import com.rrat.doggydex.core.api.ApiResponseStatus
 import com.rrat.doggydex.auth.AuthTasks
 import com.rrat.doggydex.auth.LoginActivity
 import com.rrat.doggydex.di.AuthTasksModule
-import com.rrat.doggydex.model.User
+import com.rrat.doggydex.core.model.User
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

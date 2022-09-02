@@ -4,10 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import com.rrat.doggydex.dogdetail.ui.theme.DoggyDexTheme
 import com.rrat.doggydex.main.MainActivity
-import com.rrat.doggydex.model.User
+import com.rrat.doggydex.core.model.User
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

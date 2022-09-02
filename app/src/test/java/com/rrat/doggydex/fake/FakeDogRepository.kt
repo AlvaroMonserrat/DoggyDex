@@ -1,8 +1,8 @@
 package com.rrat.doggydex.fake
 
-import com.rrat.doggydex.api.ApiResponseStatus
+import com.rrat.doggydex.core.api.ApiResponseStatus
 import com.rrat.doggydex.doglist.DogTasks
-import com.rrat.doggydex.model.Dog
+import com.rrat.doggydex.core.model.Dog
 
 class FakeDogRepository : DogTasks {
     override suspend fun getDogCollection(): ApiResponseStatus<List<Dog>> {

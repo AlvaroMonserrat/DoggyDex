@@ -1,18 +1,5 @@
 package com.rrat.doggydex.dogdetail
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.view.View
-import android.widget.Toast
-import androidx.activity.viewModels
-import coil.load
-import com.rrat.doggydex.DOG_EXTRA
-import com.rrat.doggydex.IS_RECOGNITION
-import com.rrat.doggydex.model.Dog
-import com.rrat.doggydex.R
-import com.rrat.doggydex.api.ApiResponseStatus
-import com.rrat.doggydex.databinding.ActivityDogDetailBinding
-
 /*
 class DogDetailActivity : AppCompatActivity() {
 

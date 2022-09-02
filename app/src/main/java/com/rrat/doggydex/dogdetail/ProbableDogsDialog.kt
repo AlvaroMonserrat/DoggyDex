@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rrat.doggydex.R
 import com.rrat.doggydex.dogdetail.ui.theme.DoggyDexTheme
-import com.rrat.doggydex.model.Dog
+import com.rrat.doggydex.core.model.Dog
 
 
 @Composable

@@ -1,18 +1,14 @@
 package com.rrat.doggydex.dogdetail
 
 import android.annotation.SuppressLint
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rrat.doggydex.DOG_EXTRA
 import com.rrat.doggydex.IS_RECOGNITION
 import com.rrat.doggydex.MOST_PROBABLE_DOGS_IDS_EXTRA
-import com.rrat.doggydex.api.ApiResponseStatus
-import com.rrat.doggydex.doglist.DogRepository
+import com.rrat.doggydex.core.api.ApiResponseStatus
 import com.rrat.doggydex.doglist.DogTasks
-import com.rrat.doggydex.model.Dog
+import com.rrat.doggydex.core.model.Dog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

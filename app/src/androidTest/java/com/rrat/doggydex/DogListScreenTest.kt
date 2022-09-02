@@ -1,16 +1,13 @@
 package com.rrat.doggydex
 
 import androidx.activity.ComponentActivity
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.junit4.createComposeRule
-import com.rrat.doggydex.api.ApiResponseStatus
-import com.rrat.doggydex.doglist.DogListActivity
+import com.rrat.doggydex.core.api.ApiResponseStatus
 import com.rrat.doggydex.doglist.DogListScreen
 import com.rrat.doggydex.doglist.DogListViewModel
 import com.rrat.doggydex.doglist.DogTasks
-import com.rrat.doggydex.model.Dog
+import com.rrat.doggydex.core.model.Dog
 import org.junit.Rule
 import org.junit.Test
 

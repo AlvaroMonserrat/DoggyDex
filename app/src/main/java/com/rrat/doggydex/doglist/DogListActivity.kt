@@ -4,11 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import com.rrat.doggydex.DOG_EXTRA
 import com.rrat.doggydex.dogdetail.DogDetailComposeActivity
 import com.rrat.doggydex.dogdetail.ui.theme.DoggyDexTheme
-import com.rrat.doggydex.model.Dog
+import com.rrat.doggydex.core.model.Dog
 import dagger.hilt.android.AndroidEntryPoint
 
 

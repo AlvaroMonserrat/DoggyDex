@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.rrat.doggydex.auth.LoginActivity
 import com.rrat.doggydex.databinding.ActivitySettingsBinding
-import com.rrat.doggydex.model.User
+import com.rrat.doggydex.core.model.User
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

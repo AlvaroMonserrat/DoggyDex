@@ -3,8 +3,8 @@ package com.rrat.doggydex.doglist
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rrat.doggydex.api.ApiResponseStatus
-import com.rrat.doggydex.model.Dog
+import com.rrat.doggydex.core.api.ApiResponseStatus
+import com.rrat.doggydex.core.model.Dog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

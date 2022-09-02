@@ -1,11 +1,11 @@
 package com.rrat.doggydex.viewmodels
 
-import com.rrat.doggydex.api.ApiResponseStatus
+import com.rrat.doggydex.core.api.ApiResponseStatus
 import com.rrat.doggydex.base.BaseUnitTest
 import com.rrat.doggydex.doglist.DogListViewModel
 import com.rrat.doggydex.doglist.DogTasks
 import com.rrat.doggydex.fake.FakeDogRepository
-import com.rrat.doggydex.model.Dog
+import com.rrat.doggydex.core.model.Dog
 import junit.framework.Assert.assertEquals
 import org.junit.Test
 

@@ -1,10 +1,10 @@
 package com.rrat.doggydex.viewmodels
 
-import com.rrat.doggydex.api.ApiResponseStatus
+import com.rrat.doggydex.core.api.ApiResponseStatus
 import com.rrat.doggydex.auth.AuthTasks
 import com.rrat.doggydex.auth.AuthViewModel
 import com.rrat.doggydex.base.BaseUnitTest
-import com.rrat.doggydex.model.User
+import com.rrat.doggydex.core.model.User
 import junit.framework.Assert.assertEquals
 import org.junit.Test
 

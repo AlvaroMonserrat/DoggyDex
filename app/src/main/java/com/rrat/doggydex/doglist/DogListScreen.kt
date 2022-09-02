@@ -8,12 +8,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -24,11 +21,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.rrat.doggydex.R
-import com.rrat.doggydex.api.ApiResponseStatus
+import com.rrat.doggydex.core.api.ApiResponseStatus
 import com.rrat.doggydex.composables.BackNavigationIcon
 import com.rrat.doggydex.composables.ErrorDialog
 import com.rrat.doggydex.composables.LoadingWheel
-import com.rrat.doggydex.model.Dog
+import com.rrat.doggydex.core.model.Dog
 
 
 private const val GRID_SPAN_COUNT = 3

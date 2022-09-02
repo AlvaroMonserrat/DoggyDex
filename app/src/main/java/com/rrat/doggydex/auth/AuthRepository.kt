@@ -1,13 +1,13 @@
 package com.rrat.doggydex.auth
 
 
-import com.rrat.doggydex.api.ApiResponseStatus
-import com.rrat.doggydex.api.ApiService
-import com.rrat.doggydex.api.dto.SignInDTO
-import com.rrat.doggydex.api.dto.SignUpDTO
-import com.rrat.doggydex.api.dto.UserDTOMapper
-import com.rrat.doggydex.api.makeNetworkCall
-import com.rrat.doggydex.model.User
+import com.rrat.doggydex.core.api.ApiResponseStatus
+import com.rrat.doggydex.core.api.ApiService
+import com.rrat.doggydex.core.api.dto.SignInDTO
+import com.rrat.doggydex.core.api.dto.SignUpDTO
+import com.rrat.doggydex.core.api.dto.UserDTOMapper
+import com.rrat.doggydex.core.api.makeNetworkCall
+import com.rrat.doggydex.core.model.User
 import javax.inject.Inject
 
 

@@ -1,25 +1,21 @@
 package com.rrat.doggydex.doglist
 
-import com.rrat.doggydex.R
-import com.rrat.doggydex.UNKNOWN_ERROR
-import com.rrat.doggydex.api.ApiResponseStatus
-import com.rrat.doggydex.api.ApiService
-import com.rrat.doggydex.api.dto.AddDogToUserDTO
-import com.rrat.doggydex.api.dto.DogDTOMapper
-import com.rrat.doggydex.api.makeNetworkCall
-import com.rrat.doggydex.di.IoDispatcher
-import com.rrat.doggydex.model.Dog
+import com.rrat.doggydex.core.UNKNOWN_ERROR
+import com.rrat.doggydex.core.api.ApiResponseStatus
+import com.rrat.doggydex.core.api.ApiService
+import com.rrat.doggydex.core.api.dto.AddDogToUserDTO
+import com.rrat.doggydex.core.api.dto.DogDTOMapper
+import com.rrat.doggydex.core.api.makeNetworkCall
+import com.rrat.doggydex.core.di.IoDispatcher
+import com.rrat.doggydex.core.model.Dog
 import kotlinx.coroutines.CoroutineDispatcher
-
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-
 
 
 interface DogTasks{

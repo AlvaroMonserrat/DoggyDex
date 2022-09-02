@@ -3,7 +3,6 @@ package com.rrat.doggydex.machinelearning
 import android.annotation.SuppressLint
 import android.graphics.*
 import androidx.camera.core.ImageProxy
-import com.rrat.doggydex.model.Dog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream

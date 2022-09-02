@@ -6,12 +6,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.rrat.doggydex.api.ApiResponseStatus
+import com.rrat.doggydex.core.api.ApiResponseStatus
 import com.rrat.doggydex.auth.AuthNavDestinations.LoginScreenDestination
 import com.rrat.doggydex.auth.AuthNavDestinations.SignUpScreenDestination
 import com.rrat.doggydex.composables.ErrorDialog
 import com.rrat.doggydex.composables.LoadingWheel
-import com.rrat.doggydex.model.User
+import com.rrat.doggydex.core.model.User
 
 @Composable
 fun AuthScreen(

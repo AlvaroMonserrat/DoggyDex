@@ -4,22 +4,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.rrat.doggydex.DOG_EXTRA
-import com.rrat.doggydex.IS_RECOGNITION
-import com.rrat.doggydex.MOST_PROBABLE_DOGS_IDS_EXTRA
 import com.rrat.doggydex.R
-import com.rrat.doggydex.api.ApiResponseStatus
 import com.rrat.doggydex.dogdetail.ui.theme.DoggyDexTheme
-import com.rrat.doggydex.machinelearning.DogRecognition
-import com.rrat.doggydex.model.Dog
+import com.rrat.doggydex.core.model.Dog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

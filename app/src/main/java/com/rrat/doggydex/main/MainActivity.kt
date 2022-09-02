@@ -17,20 +17,18 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.rrat.doggydex.*
-import com.rrat.doggydex.api.ApiResponseStatus
-import com.rrat.doggydex.api.ApiServiceInterceptor
+import com.rrat.doggydex.core.api.ApiResponseStatus
+import com.rrat.doggydex.core.api.ApiServiceInterceptor
 import com.rrat.doggydex.auth.LoginActivity
 import com.rrat.doggydex.databinding.ActivityMainBinding
 import com.rrat.doggydex.dogdetail.DogDetailComposeActivity
 import com.rrat.doggydex.doglist.DogListActivity
-import com.rrat.doggydex.machinelearning.Classifier
 import com.rrat.doggydex.machinelearning.DogRecognition
-import com.rrat.doggydex.model.Dog
-import com.rrat.doggydex.model.User
+import com.rrat.doggydex.core.model.Dog
+import com.rrat.doggydex.core.model.User
 import com.rrat.doggydex.settings.SettingsActivity
 import com.rrat.doggydex.testutils.EspressoIdlingResource
 import dagger.hilt.android.AndroidEntryPoint
-import org.tensorflow.lite.support.common.FileUtil
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

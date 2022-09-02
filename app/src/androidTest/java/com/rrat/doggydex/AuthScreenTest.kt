@@ -4,11 +4,11 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import com.rrat.doggydex.api.ApiResponseStatus
+import com.rrat.doggydex.core.api.ApiResponseStatus
 import com.rrat.doggydex.auth.AuthScreen
 import com.rrat.doggydex.auth.AuthTasks
 import com.rrat.doggydex.auth.AuthViewModel
-import com.rrat.doggydex.model.User
+import com.rrat.doggydex.core.model.User
 import org.junit.Rule
 import org.junit.Test
 

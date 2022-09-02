@@ -33,11 +33,11 @@ import androidx.lifecycle.SavedStateHandle
 import coil.compose.AsyncImage
 import com.rrat.doggydex.DOG_EXTRA
 import com.rrat.doggydex.R
-import com.rrat.doggydex.api.ApiResponseStatus
+import com.rrat.doggydex.core.api.ApiResponseStatus
 import com.rrat.doggydex.composables.ErrorDialog
 import com.rrat.doggydex.composables.LoadingWheel
 import com.rrat.doggydex.dogdetail.ui.theme.DoggyDexTheme
-import com.rrat.doggydex.model.Dog
+import com.rrat.doggydex.core.model.Dog
 
 
 @Composable

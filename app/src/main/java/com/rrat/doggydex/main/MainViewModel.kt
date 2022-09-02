@@ -5,17 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rrat.doggydex.api.ApiResponseStatus
-import com.rrat.doggydex.doglist.DogRepository
+import com.rrat.doggydex.core.api.ApiResponseStatus
 import com.rrat.doggydex.doglist.DogTasks
-import com.rrat.doggydex.machinelearning.Classifier
-import com.rrat.doggydex.machinelearning.ClassifierRepository
 import com.rrat.doggydex.machinelearning.ClassifierTasks
 import com.rrat.doggydex.machinelearning.DogRecognition
-import com.rrat.doggydex.model.Dog
+import com.rrat.doggydex.core.model.Dog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.nio.MappedByteBuffer
 import javax.inject.Inject
 
 @HiltViewModel

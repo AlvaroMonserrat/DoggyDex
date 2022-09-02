@@ -1,6 +1,5 @@
 package com.rrat.doggydex
 
-import android.Manifest
 import androidx.camera.core.ImageProxy
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -13,17 +12,14 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.rule.GrantPermissionRule
-import com.rrat.doggydex.api.ApiResponseStatus
+import com.rrat.doggydex.core.api.ApiResponseStatus
 import com.rrat.doggydex.di.ClassifierModule
 import com.rrat.doggydex.di.DogTasksModule
-import com.rrat.doggydex.doglist.DogRepository
 import com.rrat.doggydex.doglist.DogTasks
-import com.rrat.doggydex.machinelearning.ClassifierRepository
 import com.rrat.doggydex.machinelearning.ClassifierTasks
 import com.rrat.doggydex.machinelearning.DogRecognition
 import com.rrat.doggydex.main.MainActivity
-import com.rrat.doggydex.model.Dog
+import com.rrat.doggydex.core.model.Dog
 import com.rrat.doggydex.testutils.EspressoIdlingResource
 import dagger.Binds
 import dagger.Module

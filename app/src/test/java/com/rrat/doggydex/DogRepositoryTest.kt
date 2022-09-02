@@ -1,12 +1,12 @@
 package com.rrat.doggydex
 
-import com.rrat.doggydex.api.ApiResponseStatus
-import com.rrat.doggydex.api.ApiService
-import com.rrat.doggydex.api.dto.AddDogToUserDTO
-import com.rrat.doggydex.api.dto.DogDTO
-import com.rrat.doggydex.api.dto.SignInDTO
-import com.rrat.doggydex.api.dto.SignUpDTO
-import com.rrat.doggydex.api.response.*
+import com.rrat.doggydex.core.api.ApiResponseStatus
+import com.rrat.doggydex.core.api.ApiService
+import com.rrat.doggydex.core.api.dto.AddDogToUserDTO
+import com.rrat.doggydex.core.api.dto.DogDTO
+import com.rrat.doggydex.core.api.dto.SignInDTO
+import com.rrat.doggydex.core.api.dto.SignUpDTO
+import com.rrat.doggydex.core.api.response.*
 import com.rrat.doggydex.doglist.DogRepository
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
